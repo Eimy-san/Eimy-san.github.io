@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>抗癌肽列表</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <h1>抗癌肽分子3D展示</h1>
+        </div>
+    </header>
+    <main>
+        <h2>请选择一个抗癌肽查看其3D结构和详细信息：</h2>
+        <div id="peptide-list" class="peptide-grid"></div>
+    </main>
+    <footer>
+        <p>&copy; 2024 抗癌肽智研团</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        const peptideList = document.getElementById('peptide-list');
+
+        peptides.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'peptide-card';
+
+            // 小的3D可视化窗口容器
+            const viewerContainer = document.createElement('div');
+            const viewerId = `viewer-${encodeURIComponent(p.name)}`;
+            viewerContainer.id = viewerId;
+            viewerContainer.className = 'peptide-thumbnail';
+            card.appendChild(viewerContainer);
+
+            const info = document.createElement('div');
+            info.className = 'peptide-info';
+
+            const link = document.createElement('a');
+            link.href = `details.html?peptide=${encodeURIComponent(p.name)}`;
+            link.innerText = p.name;
+            info.appendChild(link);
+            card.appendChild(info);
+
+            peptideList.appendChild(card);
+
+            // 创建小视图
+            if (p.name === 'Asparaginase-X' || p.name === 'OncoP53-1') {
+                // 不尝试加载3D结构，直接显示截图
+                const container = document.getElementById(viewerId);
+                container.innerHTML = ''; 
+                const screenshotName = p.pdbFile.replace(/\.pdb$/i, '_screenshot.png');
+                const fallbackImg = document.createElement('img');
+                fallbackImg.src = `images/${screenshotName}`; // 根据实际路径与文件名调整
+                fallbackImg.alt = '3D预览截图';
+                fallbackImg.style.width = '200px';
+                fallbackImg.style.height = '110px';
+                fallbackImg.style.objectFit = 'cover';
+                container.appendChild(fallbackImg);
+            } else {
+                // 其他肽仍然调用 createThumbnail 加载3D结构
+                createThumbnail(viewerId, p.pdbFile);
+            }
+
+        });
+    </script>
+</body>
+</html>

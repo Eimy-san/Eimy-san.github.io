@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>抗癌肽详情</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js"></script>
+</head>
+<body>
+    <div id="loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <header>
+        <div class="navbar">
+            <h1>抗癌肽3D展示</h1>
+        </div>
+    </header>
+
+    <main>
+        <div id="peptide-info">
+            <h2 id="peptide-name">抗癌肽名称</h2>
+            <p id="peptide-description">这里将展示抗癌肽的相关描述信息。</p>
+        </div>
+        <div id="loading-indicator" style="display: none;">
+            <p>加载3D模型中，请稍候...</p>
+        </div>
+        <div id="viewer" style="width: 100%; height: 500px; position: relative;"></div>
+
+        <!-- 保留样式切换、重置、保存视图按钮，水平排列 -->
+        <div id="buttons-container">
+            <button onclick="setCartoon()">Cartoon</button>
+            <button onclick="setStick()">Stick</button>
+            <button onclick="setSphere()">Sphere</button>
+            <button onclick="resetView()">重置视图</button>
+            <button onclick="saveView()">保存视图</button>
+        </div>
+
+        <button id="back-button" onclick="goBack()">返回主页</button>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 抗癌研究团队</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            loader.style.display = 'none';
+        });
+
+        const viewer = $3Dmol.createViewer("viewer", {
+            defaultcolors: $3Dmol.rasmolElementColors,
+            backgroundColor: "white"
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const peptideName = urlParams.get('peptide');
+
+        const peptide = peptides.find(p => p.name === peptideName);
+
+        if (peptide) {
+            document.getElementById('peptide-name').innerText = peptide.name;
+            document.getElementById('peptide-description').innerText = peptide.description;
+
+            const loadingIndicator = document.getElementById('loading-indicator');
+            loadingIndicator.style.display = 'block';
+
+            fetch(`pdb/${peptide.pdbFile}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络响应不是OK');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    viewer.addModel(data, "pdb");
+                    viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
+                    viewer.zoomTo();
+                    viewer.render();
+                    loadingIndicator.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('加载PDB文件时出错:', error);
+                    document.getElementById('peptide-description').innerText += ' 无法加载3D结构。';
+                    loadingIndicator.style.display = 'none';
+                });
+        } else {
+            document.getElementById('peptide-info').innerHTML = '<p>未选择抗癌肽。</p>';
+        }
+
+        function setCartoon() {
+            viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
+            viewer.render();
+        }
+
+        function setStick() {
+            viewer.setStyle({}, { stick: { colorscheme: 'cyanCarbon' } });
+            viewer.render();
+        }
+
+        function setSphere() {
+            viewer.setStyle({}, { sphere: { scale: 0.3, colorscheme: 'greenCarbon' } });
+            viewer.render();
+        }
+
+        function resetView() {
+            viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
+            viewer.zoomTo();
+            viewer.render();
+        }
+
+        function saveView() {
+            viewer.render();
+            const canvas = viewer.renderer.domElement;
+            if (canvas) {
+                const imgData = canvas.toDataURL("image/png");
+                const link = document.createElement('a');
+                link.href = imgData;
+                link.download = `${peptide.name}_view.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                alert('视图已保存为PNG图片。');
+            } else {
+                alert('无法保存视图。');
+            }
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

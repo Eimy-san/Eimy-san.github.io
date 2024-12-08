@@ -1,0 +1,205 @@
+/* styles.css */
+
+/* 渐变背景美化 */
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+    /* 使用背景图与渐变叠加，并进行覆盖显示 */
+    background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%), url("images/dna-background.jpg") no-repeat center center fixed;
+    background-size: cover;
+    background-blend-mode: overlay;
+    color: #333;
+    height: 100%; /* 配合Flex布局让页脚固定在底部 */
+    display: flex;
+    flex-direction: column;
+}
+
+
+#loader {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #34495e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loader-spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #1abc9c;
+    border-radius: 50%;
+    width: 60px; height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+header {
+    /* background-color: #34495e; */
+    background-color: rgba(52, 73, 94, 0.6);
+    color: #ecf0f1;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2em;
+    transition: transform 0.3s;
+}
+
+header h1:hover {
+    transform: scale(1.05);
+}
+
+main {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex: 1;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    /* color: #2c3e50; */
+    color: #ffffff;
+}
+
+.peptide-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.peptide-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 200px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+}
+
+.peptide-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.2);
+}
+
+.peptide-thumbnail {
+    width: 100%;
+    height: 100px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+}
+
+.peptide-info {
+    padding: 10px;
+}
+
+.peptide-info a {
+    text-decoration: none;
+    color: #2980b9;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.peptide-info a:hover {
+    color: #1f6391;
+}
+
+#peptide-info {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#peptide-name {
+    font-size: 2em;
+    margin-bottom: 10px;
+    /* color: #2c3e50; */
+    color: #ffffff;
+}
+
+#peptide-description {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #4b4b4b;
+    background: rgba(255,255,255,0.8);
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+
+#loading-indicator {
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+    margin: 20px 0;
+}
+
+#viewer {
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#buttons-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+#buttons-container button,
+#back-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #2980b9;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    transition: background-color 0.3s, transform 0.2s;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#buttons-container button:hover,
+#back-button:hover {
+    background-color: #1f6391;
+    transform: translateY(-2px);
+}
+
+#back-button {
+    display: block;
+    margin: 20px auto;
+}
+
+footer {
+    /* background-color: #2c3e50; */
+    background-color: rgba(44, 62, 80, 0.6); 
+    color: #ecf0f1;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: auto;
+    /* margin-top: 40px; */
+}
